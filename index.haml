@@ -5,20 +5,15 @@
     %link{:href => "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.13.0/css/semantic.min.css", :rel => "stylesheet"}
     %title Characters
     :css
-      body {
-        font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
-        margin: 0;
-      }
+      .normal { text-transform: none !important; }
+      body { font-family: Helvetica Neue, Arial, Helvetica, sans-serif; }
   %body{"ng-app" => "charFilter"}
-    %div{"ng-controller" => "charCtrl"}
-      %input{"type" => "text", "ng-model" => "filter"}
-      %ul
-        %li{"ng-repeat" => "character in characters | filter: filter"}
-          {{character.name}}
-          {{character.series}}
-          %img{"src" => "{{character.graphic}}"}
-          {{character.type}}
-          {{character.tags.join(', ')}}
+    %div.ui.page.grid{"ng-controller" => "charCtrl"}
+      .column
+        %input{"type" => "text", "ng-model" => "filter"}
+        .ui.four.column.grid
+          .column{"ng-repeat" => "character in characters"}
+            .character{"data-character" => "character"}
 
     %script{:src => "//code.jquery.com/jquery-1.11.0.min.js"}
     %script{:src => "//cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"}

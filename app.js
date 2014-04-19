@@ -42,4 +42,11 @@ angular.module('charFilter', [])
       $scope.allTags = _(data).map(function(c) { return c.tags; }).flatten().uniq().value();
     })
   }])
+
+  .directive('character', function() {
+    return {
+      scope: { character: '=' },
+      templateUrl: 'character.html'
+    };
+  })
 ;
