@@ -20,12 +20,12 @@ angular.module('charFilter', [])
             return [key, value];
           }).object().value();
 
-          var base = _(lowercasedRow).pick(properties).value();
-          base.tags = _(lowercasedRow).omit(properties).map(function(value, key) {
+          var obj = _(lowercasedRow).pick(properties).value();
+          obj.tags = _(lowercasedRow).omit(properties).map(function(value, key) {
             return value ? key : null;
           }).compact().value();
 
-          return base;
+          return obj;
         }).value()
 
         /* Return value format:
@@ -46,7 +46,8 @@ angular.module('charFilter', [])
   .directive('character', function() {
     return {
       scope: { character: '=' },
-      templateUrl: 'character.html'
+      templateUrl: 'character.html',
+      replace: true
     };
   })
 ;

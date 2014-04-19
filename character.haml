@@ -1,11 +1,15 @@
-.ui.segment
-  .ui.ribbon.label {{character.name}}
-  %a.star.ui.corner.label{"ng-show" => "character.type == '1'"}
-    %i.star.icon
-  %img.ui.medium.image{"src" => "{{character.graphic}}"}
+.item.card
+  .ui.segment
+    .ui.ribbon.label {{character.name}}
+    %a.star.ui.corner.label{"ng-show" => "character.type == '1'"}
+      %i.star.icon
+    .ui.center.aligned.vertical.segment
+      %img.ui.circular.image{"ng-src" => "{{character.graphic}}"}
+      .ui.horizontal.divider
+        %i.double.angle.down.icon
+      .ui.small.circular.labels
+        .ui.label.normal{"ng-repeat" => "tag in character.tags"}
+          {{tag}}
   .ui.bottom.attached.label
     {{character.series}}
-  .ui.small.circular.labels
-    .ui.label.normal{"ng-repeat" => "tag in character.tags"}
-      {{tag}}
 

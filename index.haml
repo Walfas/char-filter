@@ -2,18 +2,15 @@
 %html{:lang => "en"}
   %head
     %meta{:charset => "UTF-8"}
+    %link{:href => "style.css", :rel => "stylesheet"}
     %link{:href => "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.13.0/css/semantic.min.css", :rel => "stylesheet"}
     %title Characters
-    :css
-      .normal { text-transform: none !important; }
-      body { font-family: Helvetica Neue, Arial, Helvetica, sans-serif; }
   %body{"ng-app" => "charFilter"}
     %div.ui.page.grid{"ng-controller" => "charCtrl"}
       .column
         %input{"type" => "text", "ng-model" => "filter"}
-        .ui.four.column.grid
-          .column{"ng-repeat" => "character in characters"}
-            .character{"data-character" => "character"}
+        .ui.five.items
+          .character{"ng-repeat" => "character in characters", "data-character" => "character"}
 
     %script{:src => "//code.jquery.com/jquery-1.11.0.min.js"}
     %script{:src => "//cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"}
