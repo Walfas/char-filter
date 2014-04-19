@@ -1,5 +1,5 @@
 angular.module('charFilter', [])
-  .value('csvUrl', 'http://example.com/blah.csv')
+  .value('csvUrl', 'https://docs.google.com/spreadsheet/pub?key=0AoZXrx74fcbJdDJLdDU5YUE1RWxNWTZ2M3FsSnFQc1E&single=true&gid=0&output=csv')
 
   .service('csvLoader', ['$http', 'csvUrl', function($http, csvUrl) {
     this.load = function(callback) {
@@ -12,25 +12,25 @@ angular.module('charFilter', [])
         var properties = ['name', 'series', 'graphic', 'type'];
 
         var rows = $.csv.toObjects(csvString);
-        var results = _.map(rows, function(row) {
+        var results = _(rows).map(function(row) {
           // Convert keys to lowercase, non-properties to booleanss
-          var lowercasedRow = _.object(_.map(row, function(value, key) {
+          var lowercasedRow = _(row).map(function(value, key) {
             key = key.toLowerCase();
             value = properties.indexOf(key) > -1 ? value : Boolean(value);
             return [key, value];
-          }));
+          }).object().value();
 
-          var splat = [lowercasedRow].concat(properties);
-
-          var base = _.pick.apply(this, splat);
-          base.attributes = _.omit.apply(this, splat);
+          var base = _(lowercasedRow).pick(properties).value();
+          base.tags = _(lowercasedRow).omit(properties).map(function(value, key) {
+            return value ? key : null;
+          }).compact().value();
 
           return base;
-        })
+        }).value()
 
         /* Return value format:
            [{name: 'a', series: 'b', graphic: 'http://example.com/test.png', type: '1',
-             attributes: { cool: true, awesome: false }] */
+             tags: ['cool', 'nice']] */
         return results;
       };
     };
@@ -39,6 +39,7 @@ angular.module('charFilter', [])
   .controller('charCtrl', ['$scope', 'csvLoader', function($scope, csvLoader) {
     csvLoader.load(function(data) {
       $scope.characters = data;
+      $scope.allTags = _(data).map(function(c) { return c.tags; }).flatten().uniq().value();
     })
   }])
 ;
