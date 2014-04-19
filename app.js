@@ -1,7 +1,24 @@
 angular.module('charFilter', [])
   .value('csvUrl', 'https://docs.google.com/spreadsheet/pub?key=0AoZXrx74fcbJdDJLdDU5YUE1RWxNWTZ2M3FsSnFQc1E&single=true&gid=0&output=csv')
+  .service('imageSearcher', ['$http', function($http) {
+    var params = {
+      callback: 'JSON_CALLBACK',
+      imgsz: 'small',
+      safe: 'active',
+      v: '1.0'
+    };
+    var baseUrl = '//ajax.googleapis.com/ajax/services/search/images?' + $.param(params);
 
-  .service('csvLoader', ['$http', 'csvUrl', function($http, csvUrl) {
+    this.search = function(query, callback) {
+      var url = baseUrl + '&q=' + query;
+      $http.jsonp(url).success(function(data) {
+        var imageUrl = _.sample(data.responseData.results).url;
+        callback(imageUrl);
+      });
+    };
+  }])
+
+  .service('csvLoader', ['$http', 'imageSearcher', 'csvUrl', function($http, imageSearcher, csvUrl) {
     this.load = function(callback) {
       $http.get(csvUrl).then(function(response) {
         var results = parseCsv(response.data);
@@ -24,6 +41,12 @@ angular.module('charFilter', [])
           obj.tags = _(lowercasedRow).omit(properties).map(function(value, key) {
             return value ? key : null;
           }).compact().value();
+
+          if (obj.graphic == '') {
+            imageSearcher.search([obj.name, obj.series].join(' '), function (url) {
+              obj.graphic = url;
+            });
+          }
 
           return obj;
         }).value()
