@@ -1,0 +1,28 @@
+!!! 5
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "UTF-8"}
+    %link{:href => "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.13.0/css/semantic.min.css", :rel => "stylesheet"}
+    %title Test
+    :css
+      body {
+        font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+        margin: 0;
+      }
+  %body{"ng-app" => "charFilter"}
+    %div{"ng-controller" => "charCtrl"}
+      %ul
+        %li{"ng-repeat" => "character in characters"}
+          {{character.name}}
+          {{character.series}}
+          %img{"src" => "{{character.graphic}}"}
+          {{character.type}}
+
+    %script{:src => "//code.jquery.com/jquery-1.11.0.min.js"}
+    %script{:src => "//cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"}
+    %script{:src => "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.13.0/javascript/semantic.min.js"}
+    %script{:src => "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"}
+
+    %script{:src => "//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"}
+    %script{:src => "app.js"}
+
