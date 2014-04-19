@@ -42,11 +42,13 @@ angular.module('charFilter', [])
             return value ? key : null;
           }).compact().value();
 
+          /*
           if (obj.graphic == '') {
             imageSearcher.search([obj.name, obj.series].join(' '), function (url) {
               obj.graphic = url;
             });
           }
+          */
 
           return obj;
         }).value()
@@ -59,13 +61,6 @@ angular.module('charFilter', [])
     };
   }])
 
-  .controller('charCtrl', ['$scope', 'csvLoader', function($scope, csvLoader) {
-    csvLoader.load(function(data) {
-      $scope.characters = data;
-      $scope.allTags = _(data).map(function(c) { return c.tags; }).flatten().uniq().value();
-    })
-  }])
-
   .directive('character', function() {
     return {
       scope: { character: '=' },
@@ -73,4 +68,36 @@ angular.module('charFilter', [])
       replace: true
     };
   })
+
+  .controller('charCtrl', ['$scope', 'csvLoader', function($scope, csvLoader) {
+    $scope.selectedTags = [];
+
+    csvLoader.load(function(data) {
+      $scope.characters = data;
+      $scope.allTags = _(data).map(function(c) { return c.tags; }).flatten().uniq().value();
+    })
+
+    $scope.tagMatches = function(tag) {
+      return $scope.selectedTags.indexOf(tag) > -1;
+    }
+
+    $scope.toggleTag = function(tag) {
+      var index = $scope.selectedTags.indexOf(tag);
+
+      if (index < 0) {
+        $scope.selectedTags.push(tag);
+      } else {
+        $scope.selectedTags.splice(index, 1);
+      }
+    }
+
+    $scope.filterCharacter = function(character) {
+      if ($scope.selectedTags.length == 0) return true;
+
+      return _.difference($scope.selectedTags, character.tags).length == 0;
+
+      var common = _.intersection($scope.selectedTags, character.tags);
+      return common.length == $scope.selectedTags.length;
+    }
+  }])
 ;

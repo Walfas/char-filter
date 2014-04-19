@@ -3,12 +3,15 @@
     .ui.ribbon.label {{character.name}}
     %a.star.ui.corner.label{"ng-show" => "character.type == '1'"}
       %i.star.icon
+
     .ui.center.aligned.vertical.segment
       %img.ui.circular.image{"ng-src" => "{{character.graphic}}"}
       .ui.horizontal.divider
         %i.double.angle.down.icon
       .ui.small.circular.labels
-        .ui.label.normal{"ng-repeat" => "tag in character.tags"}
+        .ui.label.normal{"ng-repeat" => "tag in character.tags",
+          "ng-class" => "$parent.$parent.tagMatches(tag) ? 'green' : ''",
+          "ng-click" => "$parent.$parent.toggleTag(tag)"}
           {{tag}}
   .ui.bottom.attached.label
     {{character.series}}
