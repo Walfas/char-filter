@@ -7,7 +7,7 @@
     .ui.center.aligned.vertical.segment
       %img.ui.circular.image{"ng-src" => "{{character.graphic}}"}
       .ui.horizontal.divider
-        %i.double.angle.down.icon
+        {{character.tags.length}} tags
       .ui.small.circular.labels
         .ui.label.normal{"ng-repeat" => "tag in character.tags",
           "ng-class" => "tagMatches(tag) ? selectedColor : ''",
