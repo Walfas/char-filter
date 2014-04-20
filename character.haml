@@ -10,8 +10,8 @@
         %i.double.angle.down.icon
       .ui.small.circular.labels
         .ui.label.normal{"ng-repeat" => "tag in character.tags",
-          "ng-class" => "$parent.$parent.tagMatches(tag) ? 'green' : ''",
-          "ng-click" => "$parent.$parent.toggleTag(tag)"}
+          "ng-class" => "tagMatches(tag) ? 'green' : ''",
+          "ng-click" => "toggleTag(tag)"}
           {{tag}}
   .ui.bottom.attached.label
     {{character.series}}

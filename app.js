@@ -40,7 +40,7 @@ angular.module('charFilter', [])
           var obj = _(lowercasedRow).pick(properties).value();
           obj.tags = _(lowercasedRow).omit(properties).map(function(value, key) {
             return value ? key : null;
-          }).compact().value();
+          }).compact().sort().value();
 
           /*
           if (obj.graphic == '') {
@@ -63,7 +63,7 @@ angular.module('charFilter', [])
 
   .directive('character', function() {
     return {
-      scope: { character: '=' },
+      transclude: true,
       templateUrl: 'character.html',
       replace: true
     };
