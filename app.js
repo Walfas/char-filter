@@ -40,9 +40,7 @@ angular.module('charFilter', [])
           }).object().value();
 
           var obj = _(lowercasedRow).pick(properties).value();
-          obj.tags = _(lowercasedRow).omit(properties).map(function(value, key) {
-            return value ? key : null;
-          }).compact().sort().value();
+          obj.tags = _(lowercasedRow).omit(properties).value();
 
           /*
           if (obj.graphic == '') {
@@ -57,7 +55,7 @@ angular.module('charFilter', [])
 
         /* Return value format:
            [{name: 'a', series: 'b', graphic: 'http://example.com/test.png', type: '1',
-             tags: ['cool', 'nice']] */
+           tags: { cool: true, nice: false }] */
         return results;
       };
     };
@@ -75,12 +73,12 @@ angular.module('charFilter', [])
     $scope.characters = [];
     $scope.selectedTags = [];
 
-    $scope.selectedColor = 'red';
+    $scope.selectedColor = 'green';
 
     csvLoader.load(function(data) {
       $scope.characters = data;
       $scope.allTags = _(data)
-        .map(function(c) { return c.tags; })
+        .map(function(c) { return Object.keys(c.tags); })
         .flatten()
         .uniq()
         .sort()
@@ -103,17 +101,18 @@ angular.module('charFilter', [])
 
     $scope.count = function(tag) {
       return _($scope.filteredCharacters)
-        .filter(function(c) { return _.contains(c.tags, tag); })
+        .filter(function(c) { return c.tags[tag]; })
         .size();
+    }
+
+    $scope.getTags = function(character) {
+      return _.keys(character.tags);
     }
 
     $scope.filterCharacter = function(character) {
       if ($scope.selectedTags.length == 0) return true;
 
-      return _.difference($scope.selectedTags, character.tags).length == 0;
-
-      var common = _.intersection($scope.selectedTags, character.tags);
-      return common.length == $scope.selectedTags.length;
+      return _.every($scope.selectedTags, function(tag) { return character.tags[tag]; });
     }
   }])
 ;

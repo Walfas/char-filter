@@ -9,7 +9,7 @@
       .ui.horizontal.divider
         %i.double.angle.down.icon
       .ui.small.circular.labels
-        .ui.label.normal{"ng-repeat" => "tag in character.tags",
+        .ui.label.normal{"ng-repeat" => "tag in getTags(character)",
           "ng-class" => "tagMatches(tag) ? selectedColor : ''",
           "ng-click" => "toggleTag(tag)"}
           {{tag}}
