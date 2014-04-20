@@ -5,16 +5,32 @@
     %link{:href => "style.css", :rel => "stylesheet"}
     %link{:href => "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.13.0/css/semantic.min.css", :rel => "stylesheet"}
     %title Characters
-  %body{"ng-app" => "charFilter"}
+  %body{"ng-app" => "charFilter", "ng-controller" => "charCtrl"}
 
-    %div.ui.page.grid{"ng-controller" => "charCtrl"}
+    -# Sidebar
+    .ui.thin.sidebar.vertical.menu{"ng-class" => "selectedColor"}
+      .item
+        %strong
+          Attributes
+          %i.remove.sign.icon{"ng-show" => "selectedTags.length > 0",
+            "ng-click" => "selectedTags = []"}
+        .menu
+          %a.item{"ng-repeat" => "tag in allTags",
+            "ng-click" => "toggleTag(tag)",
+            "ng-class" => "(matched = tagMatches(tag)) ? 'active' : ''"}
+            {{tag}}
+            .ui.label{"ng-show" => "numChars > 0",
+              "ng-class" => "matched ? selectedColor : ''"}
+              {{numChars = count(tag)}}
+
+    -# Content
+    %div.ui.grid
       .column
-        {{selectedTags}}
-
         .ui.five.items
-          .character{"ng-repeat" => "character in characters | filter: filterCharacter",
+          .character{"ng-repeat" => "character in filteredCharacters = (characters | filter: filterCharacter)",
             "data-character" => "character"}
 
+    -# Scripts
     %script{:src => "//code.jquery.com/jquery-1.11.0.min.js"}
     %script{:src => "//cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"}
     %script{:src => "//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.13.0/javascript/semantic.min.js"}

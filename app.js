@@ -1,3 +1,5 @@
+$('.sidebar').sidebar('show');
+
 angular.module('charFilter', [])
   .value('csvUrl', 'https://docs.google.com/spreadsheet/pub?key=0AoZXrx74fcbJdDJLdDU5YUE1RWxNWTZ2M3FsSnFQc1E&single=true&gid=0&output=csv')
   .service('imageSearcher', ['$http', function($http) {
@@ -63,18 +65,26 @@ angular.module('charFilter', [])
 
   .directive('character', function() {
     return {
-      transclude: true,
+      replace: true,
       templateUrl: 'character.html',
-      replace: true
+      transclude: true
     };
   })
 
   .controller('charCtrl', ['$scope', 'csvLoader', function($scope, csvLoader) {
+    $scope.characters = [];
     $scope.selectedTags = [];
+
+    $scope.selectedColor = 'red';
 
     csvLoader.load(function(data) {
       $scope.characters = data;
-      $scope.allTags = _(data).map(function(c) { return c.tags; }).flatten().uniq().value();
+      $scope.allTags = _(data)
+        .map(function(c) { return c.tags; })
+        .flatten()
+        .uniq()
+        .sort()
+        .value();
     })
 
     $scope.tagMatches = function(tag) {
@@ -89,6 +99,12 @@ angular.module('charFilter', [])
       } else {
         $scope.selectedTags.splice(index, 1);
       }
+    }
+
+    $scope.count = function(tag) {
+      return _($scope.filteredCharacters)
+        .filter(function(c) { return _.contains(c.tags, tag); })
+        .size();
     }
 
     $scope.filterCharacter = function(character) {
