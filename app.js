@@ -74,6 +74,7 @@ angular.module('charFilter', [])
   .controller('charCtrl', ['$scope', 'csvLoader', function($scope, csvLoader) {
     $scope.characters = [];
     $scope.selectedTags = [];
+    $scope.selectedSeries = '';
 
     $scope.selectedColor = 'red';
 
@@ -91,14 +92,25 @@ angular.module('charFilter', [])
       return $scope.selectedTags.indexOf(tag) > -1;
     }
 
-    $scope.toggleTag = function(tag) {
-      var index = $scope.selectedTags.indexOf(tag);
+    function toggle(array, value) {
+      var index = array.indexOf(value);
 
       if (index < 0) {
-        $scope.selectedTags.push(tag);
+        array.push(value);
       } else {
-        $scope.selectedTags.splice(index, 1);
+        array.splice(index, 1);
       }
+    }
+
+    $scope.toggleTag = function(tag) {
+      toggle($scope.selectedTags, tag);
+    }
+
+    $scope.toggleSeries = function(series) {
+      if ($scope.selectedSeries)
+        $scope.selectedSeries = '';
+      else
+        $scope.selectedSeries = series;
     }
 
     $scope.count = function(tag) {
@@ -107,13 +119,26 @@ angular.module('charFilter', [])
         .size();
     }
 
-    $scope.filterCharacter = function(character) {
-      if ($scope.selectedTags.length == 0) return true;
+    function filterBySeries(character) {
+      if ($scope.selectedSeries)
+        return $scope.selectedSeries == character.series;
+      else
+        return true;
+    }
+
+    function filterByTags(character) {
+      if ($scope.selectedTags.length == 0)
+        return true;
 
       return _.difference($scope.selectedTags, character.tags).length == 0;
+    }
 
-      var common = _.intersection($scope.selectedTags, character.tags);
-      return common.length == $scope.selectedTags.length;
+    $scope.filterCharacters = function() {
+      $scope.filteredCharacters = _($scope.characters)
+        .filter(filterBySeries)
+        .filter(filterByTags)
+        .value();
+      return $scope.filteredCharacters;
     }
   }])
 ;

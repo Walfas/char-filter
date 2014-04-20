@@ -13,6 +13,7 @@
           "ng-class" => "tagMatches(tag) ? selectedColor : ''",
           "ng-click" => "toggleTag(tag)"}
           {{tag}}
-  .ui.bottom.attached.label
+  .ui.bottom.attached.label{"ng-click" => "toggleSeries(character.series)",
+    "ng-class" => "selectedSeries ? selectedColor : ''" }
     {{character.series}}
 

@@ -9,6 +9,9 @@
 
     -# Sidebar
     .ui.thin.sidebar.vertical.menu{"ng-class" => "selectedColor"}
+      .item{"ng-show" => "selectedSeries", "ng-click" => "toggleSeries()"}
+        %i.delete.icon
+        {{selectedSeries}}
       .item
         %strong
           Tags
@@ -27,7 +30,7 @@
     %div.ui.grid
       .column
         .ui.five.items
-          .character{"ng-repeat" => "character in filteredCharacters = (characters | filter: filterCharacter)",
+          .character{"ng-repeat" => "character in filterCharacters()",
             "data-character" => "character"}
 
     -# Scripts
